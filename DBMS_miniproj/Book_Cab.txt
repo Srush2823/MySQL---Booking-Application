@@ -1,0 +1,116 @@
+package Cab_Booking_DBMS;
+
+import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+public class Book_Cab extends JFrame implements ActionListener {
+
+    private JPanel contentPane;
+    private JTextField Locationfield;
+    private JTextField Destinationfield;
+    JButton bkbtn;
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    Book_Cab frame = new Book_Cab();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the frame.
+     */
+    public Book_Cab() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 437, 545);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(154, 150, 150));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setResizable(false);
+
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(192, 192, 192));
+        panel.setBounds(10, 10, 404, 488);
+        contentPane.add(panel);
+        panel.setLayout(null);
+
+        ImageIcon i28 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/cab1.png"));
+        Image i29 = i28.getImage().getScaledInstance(130,130,Image.SCALE_DEFAULT);
+        ImageIcon i30 = new ImageIcon(i29);
+        JLabel Book_cab = new JLabel(i30);
+        Book_cab.setBounds(103, 24, 169, 120);
+        panel.add(Book_cab);
+
+        JLabel lblNewLabel_1 = new JLabel("Location");
+        lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 18));
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setBounds(10, 165, 130, 56);
+        panel.add(lblNewLabel_1);
+
+        JLabel lblNewLabel_1_1 = new JLabel("Destination");
+        lblNewLabel_1_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_1.setFont(new Font("Verdana", Font.BOLD, 18));
+        lblNewLabel_1_1.setBounds(10, 245, 130, 56);
+        panel.add(lblNewLabel_1_1);
+
+        Destinationfield = new JTextField();
+        Destinationfield.setColumns(10);
+        Destinationfield.setBounds(133, 249, 217, 46);
+        panel.add(Destinationfield);
+
+        Locationfield = new JTextField();
+        Locationfield.setColumns(10);
+        Locationfield.setBounds(133, 169, 217, 46);
+        panel.add(Locationfield);
+
+        bkbtn = new JButton("BOOK");
+        bkbtn.setBackground(new Color(105, 105, 105));
+        bkbtn.setForeground(new Color(0, 0, 0));
+        bkbtn.setFont(new Font("Verdana", Font.BOLD, 14));
+        bkbtn.setBounds(128, 364, 169, 46);
+        bkbtn.addActionListener(this);
+        panel.add(bkbtn);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        if(e.getSource()==bkbtn) {
+
+            String Uid = User_Login_Main.UserName;
+            String loc = Locationfield.getText();
+            String des = Destinationfield.getText();
+
+            Methods obj = new Methods();
+            try {
+                obj.InsertTrip(Uid,loc,des);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            this.dispose();
+            new ThankYou().setVisible(true);
+        }
+    }
+}
