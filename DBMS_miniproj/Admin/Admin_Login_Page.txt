@@ -1,0 +1,160 @@
+package Cab_Booking_DBMS;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.sql.*;
+
+public class Admin_Login_Main extends JFrame implements ActionListener
+{
+    public JButton loginbtn;
+    public JButton Snbtn_1;
+
+    static  String AdminName,Password;
+
+    static JTextArea adminfield;
+    static JPasswordField passfield;
+
+    public Admin_Login_Main()  {
+        setTitle("Login");
+        getContentPane().setBackground(Color.WHITE);
+        setBounds(100, 100, 417, 564);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+        setResizable(false);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(154, 150, 150));
+        panel.setBounds(0, 0, 420, 521);
+        getContentPane().add(panel);
+        panel.setLayout(null);
+
+        loginbtn = new JButton("LOGIN");
+        loginbtn.setBackground(new Color(105, 105, 105));
+        loginbtn.setForeground(new Color(0, 0, 0));
+        loginbtn.setFont(new Font("Verdana", Font.BOLD, 14));
+        loginbtn.setBounds(132, 371, 169, 36);
+        loginbtn.addActionListener(this);
+        panel.add(loginbtn);
+
+
+        adminfield = new JTextArea();
+        adminfield.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        adminfield.setBounds(71, 224, 284, 36);
+        panel.add(adminfield);
+
+        passfield= new JPasswordField();
+        passfield.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        passfield.setBounds(71, 306, 284, 36);
+        panel.add(passfield);
+
+
+        JTextArea textArea = new JTextArea();
+        textArea.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        textArea.setBounds(71, 224, 284, 36);
+        panel.add(textArea);
+
+        JTextArea textArea_1 = new JTextArea();
+        textArea_1.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        textArea_1.setBounds(71, 306, 284, 36);
+        panel.add(textArea_1);
+
+        JLabel lblNewLabel = new JLabel("ADMIN NAME");
+        lblNewLabel.setBackground(new Color(105, 105, 105));
+        lblNewLabel.setForeground(new Color(0, 0, 0));
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 17));
+        lblNewLabel.setBounds(71, 203, 111, 22);
+        panel.add(lblNewLabel);
+
+        JLabel lblNewLabel_1 = new JLabel("PASSWORD");
+        lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        lblNewLabel_1.setBackground(new Color(105, 105, 105));
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setBounds(71, 280, 111, 27);
+        panel.add(lblNewLabel_1);
+
+
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/Admin_icon.png"));
+        Image i2 = i1.getImage().getScaledInstance(130,130,Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);
+        JLabel admin_img = new JLabel(i3);
+        admin_img.setBounds(97, 48, 210, 131);
+        panel.add(admin_img);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        AdminName=adminfield.getText();
+        Password=passfield.getText();
+
+        if(e.getSource()==loginbtn) {
+
+            try{
+//                System.out.println(UserName);
+//                System.out.println(Password);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+
+                String query = "Select Password from Admin_Pass where AdminName=?";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Admin_Id = Admin_Login_Main.AdminName;
+
+                prep_stmt.setString(1,Admin_Id );
+
+                ResultSet rs = prep_stmt.executeQuery();
+                //System.out.println(rs);
+                while(rs.next()){
+                    String pass= rs.getString("Password");
+                    System.out.println(pass);
+                    System.out.println(Password);
+                    if(pass.equals(Password)){
+                        System.out.println("Inside");
+                        this.dispose();
+                        new Admin_Page().setVisible(true);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this,"Wrong Username or Password") ;
+                    }
+                }
+            }catch(SQLException exp){
+
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+        if(e.getSource()==Snbtn_1) {
+            this.dispose();
+            try {
+                new User_Sign_Up().setVisible(true);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+
+    }
+    public static void main(String[] args)
+    {
+        EventQueue.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    new Admin_Login_Main().setVisible(true);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        );
+    }
+}
