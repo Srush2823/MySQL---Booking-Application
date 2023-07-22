@@ -1,0 +1,538 @@
+package Cab_Booking_DBMS;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+
+public class User_Page extends JFrame implements ActionListener {
+    private JTextField textField;
+    private JTable table;
+    JScrollPane scrollPane;
+    JButton bkbtn, sort_by_date, sort_by_cost, grp_by_dest, avg_cost, max_cost, min_cost, view;
+    JTextArea home,work;
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    User_Page frame = new User_Page();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the frame.
+     */
+    public User_Page() {
+        getContentPane().setBackground(new Color(154, 150, 150));
+        getContentPane().setLayout(null);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(192, 192, 192));
+        panel.setBounds(0, 0, 341, 600);
+        getContentPane().add(panel);
+        panel.setLayout(null);
+        setResizable(false);
+
+        ImageIcon i16 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/User_login.png"));
+        Image i17 = i16.getImage().getScaledInstance(130, 130, Image.SCALE_DEFAULT);
+        ImageIcon i18 = new ImageIcon(i17);
+        JLabel user_page = new JLabel(i18);
+        user_page.setBounds(10, 10, 100, 107);
+        panel.add(user_page);
+
+        JLabel lblNewLabel_1 = new JLabel("USER INFO");
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setFont(new Font("Yu Gothic", Font.BOLD, 15));
+        lblNewLabel_1.setBounds(120, 44, 190, 20);
+        panel.add(lblNewLabel_1);
+
+        textField = new JTextField();
+        textField.setFont(new Font("Sitka Text", Font.PLAIN, 15));
+        textField.setBackground(new Color(255, 255, 255));
+        textField.setBounds(120, 74, 190, 31);
+        panel.add(textField);
+        textField.setColumns(10);
+        textField.setEditable(false);
+        textField.setText(User_Login_Main.name);
+
+        ImageIcon i25 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/office.png"));
+        Image i26 = i25.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+        ImageIcon i27 = new ImageIcon(i26);
+        JLabel office = new JLabel(i27);
+        office.setBounds(21, 202, 46, 46);
+        panel.add(office);
+
+        ImageIcon i19 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/Home.png"));
+        Image i20 = i19.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+        ImageIcon i21 = new ImageIcon(i20);
+        JLabel home_user = new JLabel(i21);
+        home_user.setBounds(23, 127, 44, 46);
+        panel.add(home_user);
+
+        ImageIcon i22 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/cab.png"));
+        Image i23 = i22.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+        ImageIcon i24 = new ImageIcon(i23);
+        JLabel cab1 = new JLabel(i24);
+        cab1.setBounds(21, 280, 46, 46);
+        panel.add(cab1);
+
+
+        home = new JTextArea();
+        home.setBackground(new Color(255, 255, 255));
+        home.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 14));
+        home.setBounds(130, 127, 180, 40);
+        panel.add(home);
+        home.setEditable(false);
+        home.setText(User_Login_Main.Home_addr);
+//        textArea.setColumns(10);
+//        textArea.setEditable(false);
+//        textArea.setText(User_Login_Main.);
+
+        work = new JTextArea();
+        work.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 14));
+        work.setBackground(new Color(255, 255, 255));
+        work.setBounds(130, 202, 180, 40);
+        panel.add(work);
+        work.setEditable(false);
+        work.setText(User_Login_Main.Work_addr);
+
+        bkbtn = new JButton("Book Cab");
+        bkbtn.setBackground(new Color(105, 105, 105));
+        bkbtn.setForeground(new Color(0, 0, 0));
+        bkbtn.setFont(new Font("Verdana", Font.BOLD, 14));
+        bkbtn.setBounds(77, 280, 212, 39);
+        bkbtn.addActionListener(this);
+        panel.add(bkbtn);
+
+        sort_by_date = new JButton("Sort Date");
+        sort_by_date.setBackground(new Color(105, 105, 105));
+        sort_by_date.setForeground(new Color(0, 0, 0));
+        sort_by_date.setFont(new Font("Verdana", Font.BOLD, 14));
+        sort_by_date.setBounds(15, 340, 130, 39);
+        sort_by_date.addActionListener(this);
+        panel.add(sort_by_date);
+
+        sort_by_cost = new JButton("Sort Cost");
+        sort_by_cost.setBackground(new Color(105, 105, 105));
+        sort_by_cost.setForeground(new Color(0, 0, 0));
+        sort_by_cost.setFont(new Font("Verdana", Font.BOLD, 14));
+        sort_by_cost.setBounds(15, 390, 130, 39);
+        sort_by_cost.addActionListener(this);
+        panel.add(sort_by_cost);
+
+        grp_by_dest = new JButton("Grp by Dest");
+        grp_by_dest.setBackground(new Color(105, 105, 105));
+        grp_by_dest.setForeground(new Color(0, 0, 0));
+        grp_by_dest.setFont(new Font("Verdana", Font.BOLD, 14));
+        grp_by_dest.setBounds(15, 445, 130, 39);
+        grp_by_dest.addActionListener(this);
+        panel.add(grp_by_dest);
+
+        avg_cost = new JButton("Avg Cost");
+        avg_cost.setBackground(new Color(105, 105, 105));
+        avg_cost.setForeground(new Color(0, 0, 0));
+        avg_cost.setFont(new Font("Verdana", Font.BOLD, 14));
+        avg_cost.setBounds(200, 340, 130, 39);
+        avg_cost.addActionListener(this);
+        panel.add(avg_cost);
+
+        max_cost = new JButton("Max Trip");
+        max_cost.setBackground(new Color(105, 105, 105));
+        max_cost.setForeground(new Color(0, 0, 0));
+        max_cost.setFont(new Font("Verdana", Font.BOLD, 14));
+        max_cost.setBounds(200, 390, 130, 39);
+        max_cost.addActionListener(this);
+        panel.add(max_cost);
+
+        min_cost = new JButton("Min Trip");
+        min_cost.setBackground(new Color(105, 105, 105));
+        min_cost.setForeground(new Color(0, 0, 0));
+        min_cost.setFont(new Font("Verdana", Font.BOLD, 14));
+        min_cost.setBounds(200, 445, 130, 39);
+        min_cost.addActionListener(this);
+        panel.add(min_cost);
+
+
+        view = new JButton("View");
+        view.setBackground(new Color(105, 105, 105));
+        view.setForeground(new Color(0, 0, 0));
+        view.setFont(new Font("Verdana", Font.BOLD, 14));
+        view.setBounds(100, 500, 130, 39);
+        view.addActionListener(this);
+        panel.add(view);
+
+
+        JPanel panel_1 = new JPanel();
+        panel_1.setBackground(new Color(154, 150, 150));
+        panel_1.setBounds(351, 10, 496, 800);
+        getContentPane().add(panel_1);
+        panel_1.setLayout(null);
+
+        JLabel lblNewLabel_2 = new JLabel("HISTORY");
+        lblNewLabel_2.setForeground(new Color(0, 0, 0));
+        lblNewLabel_2.setFont(new Font("Yu Gothic", Font.BOLD, 35));
+        lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel_2.setBounds(20, 15, 200, 55);
+        panel_1.add(lblNewLabel_2);
+
+
+        scrollPane = new JScrollPane();
+        scrollPane.setBounds(30, 55, 456, 400);
+        panel_1.add(scrollPane);
+
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        table = new JTable();
+        scrollPane.setViewportView(table);
+        setBounds(100, 100, 884, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+
+        if (e.getSource() == grp_by_dest) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select count(*) as count , Destination from Trip where UserId = ? group by destination";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Uid = User_Login_Main.UserName;
+                prep_stmt.setString(1, Uid);
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+                    String uid = rs.getString("count");
+                    String name = rs.getString("Destination");
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {uid, name};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+//************************************************************************************************************************
+
+
+        if (e.getSource() == max_cost) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select UserId, DriverId, Location,Destination,Distance,Cost,Date from Trip where cost = (select MAX(cost) from (select cost from Trip where UserId = ?) as A)";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Uid = User_Login_Main.UserName;
+                prep_stmt.setString(1, Uid);
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                table.setModel(new DefaultTableModel());
+
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+                    String uid = rs.getString("UserId");
+                    String did = rs.getString("DriverId");
+                    String loc = rs.getString("Location");
+                    String des = rs.getString("Destination");
+                    String dist = rs.getString("Distance");
+                    String cost = rs.getString("Cost");
+                    String date = rs.getString("Date");
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {uid, did, loc, des, dist, cost, date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+//*********************************************************************************************************************
+
+
+        if (e.getSource() == min_cost) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select UserId, DriverId, Location,Destination,Distance,Cost,Date from Trip where cost = (select MIN(cost) from (select cost from Trip where UserId = ?) as A)";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Uid = User_Login_Main.UserName;
+                prep_stmt.setString(1, Uid);
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+                    String uid = rs.getString("UserId");
+                    String did = rs.getString("DriverId");
+                    String loc = rs.getString("Location");
+                    String des = rs.getString("Destination");
+                    String dist = rs.getString("Distance");
+                    String cost = rs.getString("Cost");
+                    String date = rs.getString("Date");
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {uid, did, loc, des, dist, cost, date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+//**************************************************************************************************************************
+//        final String DB_URL = "jdbc:mysql://localhost/Cab";
+//        final String USER = "";
+//        final String PASS = "";
+//        Connection conn = null;
+//        Statement stmt = null;
+
+        Connection conn = null;
+
+        if (e.getSource() == sort_by_date) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select A.UserId,A.Name ,B.Date from User as A ,Trip as B where A.UserId=B.UserId and A.UserId=? order by Date";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Uid = User_Login_Main.UserName;
+                prep_stmt.setString(1, Uid);
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+                    String uid = rs.getString("UserId");
+                    String name = rs.getString("Name");
+                    String date = rs.getString("Date");
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {uid, name, date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+//*********************************************************************************************************************
+
+
+        if (e.getSource() == avg_cost) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select AVG(cost),Destination,UserId from Trip where UserId = ? group by Destination limit 1";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Uid = User_Login_Main.UserName;
+                prep_stmt.setString(1, Uid);
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+                    String uid = rs.getString("AVG(cost)");
+                    String name = rs.getString("Destination");
+                    String date = rs.getString("UserId");
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {uid, name, date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+//*********************************************************************************************************************
+
+
+        if (e.getSource() == sort_by_cost) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select A.UserId,A.Name ,B.Cost ,B.Date from User as A ,Trip as B where A.UserId=B.UserId and A.UserId=? order by Cost";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Uid = User_Login_Main.UserName;
+                prep_stmt.setString(1, Uid);
+                System.out.println(Uid);
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+                    String uid = rs.getString(1);
+                    String name = rs.getString(2);
+                    String cost = rs.getString(3);
+                    String date = rs.getString(4);
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format( uid, name,cost, date));
+
+                    String[] row = {uid, name, cost, date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+//****************************************************************************************************************************
+
+
+        if (e.getSource() == view) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                Statement st = conn.createStatement();
+                String query = "select UserId, Location ,Destination,Distance,Cost,Date from Trip where UserId=?";
+                String Uid = User_Login_Main.UserName;
+
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                prep_stmt.setString(1, Uid);
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+
+
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next()) {
+
+                    String uid = rs.getString("UserId");
+                    String loc = rs.getString("Location");
+                    String dest = rs.getString("Destination");
+                    String dist = rs.getString("Distance");
+                    String cost = rs.getString("Cost");
+                    String date = rs.getString("Date");
+
+
+                    String[] row = {uid, loc,dest, dist, cost, date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            } catch (ClassNotFoundException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        if(e.getSource()==bkbtn)
+        {
+            this.dispose();
+            new Book_Cab().setVisible(true);
+        }
+    }
+}

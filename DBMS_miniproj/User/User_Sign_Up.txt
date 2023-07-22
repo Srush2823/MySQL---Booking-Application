@@ -1,0 +1,197 @@
+package Cab_Booking_DBMS;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+public class User_Sign_Up extends JFrame implements ActionListener {
+
+    private JPanel contentPane;
+    private JTextField namefield;
+    private JTextField PhNumber;
+    private JTextField email_field;
+    private JTextField home_addr;
+    private JTextField work_addr;
+    private JTextField userfield;
+    private JTextField passwordfield;
+    public JButton Snbtn;
+
+
+     String name,homeaddress,workAddress,Email,PhNo;
+     String UserName,Password;
+//    static int PhNo;
+
+    /**
+     * Launch the application.
+     */
+
+    /**
+     * Create the frame.
+     */
+    public User_Sign_Up() throws SQLException, ClassNotFoundException {
+
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 479, 568);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(105, 105, 105));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setResizable(false);
+
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(154, 150, 150));
+        panel.setBounds(10, 10, 445, 511);
+        contentPane.add(panel);
+        panel.setLayout(null);
+
+        JLabel lblNewLabel = new JLabel("SIGN UP");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel.setForeground(new Color(0, 0, 0));
+        lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 20));
+        lblNewLabel.setBounds(71, 20, 268, 34);
+        panel.add(lblNewLabel);
+
+        namefield = new JTextField();
+        namefield.setBounds(173, 75, 209, 34);
+        panel.add(namefield);
+        namefield.setColumns(10);
+
+        JLabel lblNewLabel_1 = new JLabel("Name");
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1.setBounds(10, 72, 153, 34);
+        //name=lblNewLabel_1.getText();
+        panel.add(lblNewLabel_1);
+
+        JLabel lblNewLabel_1_1 = new JLabel("Phone Number");
+        lblNewLabel_1_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_1.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1_1.setBounds(10, 116, 153, 34);
+        panel.add(lblNewLabel_1_1);
+
+        JLabel lblNewLabel_1_2 = new JLabel("Email");
+        lblNewLabel_1_2.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_2.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1_2.setBounds(10, 160, 153, 34);
+        panel.add(lblNewLabel_1_2);
+
+        JLabel lblNewLabel_1_3 = new JLabel("Home Address");
+        lblNewLabel_1_3.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1_3.setBounds(10, 204, 153, 34);
+        panel.add(lblNewLabel_1_3);
+
+        JLabel lblNewLabel_1_3_1 = new JLabel("Work Address");
+        lblNewLabel_1_3_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3_1.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1_3_1.setBounds(10, 248, 153, 34);
+        panel.add(lblNewLabel_1_3_1);
+
+        JLabel lblNewLabel_1_3_1_1 = new JLabel("UserName");
+        lblNewLabel_1_3_1_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3_1_1.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1_3_1_1.setBounds(10, 292, 153, 34);
+        panel.add(lblNewLabel_1_3_1_1);
+
+        JLabel lblNewLabel_1_3_1_2 = new JLabel("Password");
+        lblNewLabel_1_3_1_2.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3_1_2.setFont(new Font("Verdana", Font.BOLD, 17));
+        lblNewLabel_1_3_1_2.setBounds(10, 338, 153, 34);
+        panel.add(lblNewLabel_1_3_1_2);
+
+        PhNumber = new JTextField();
+        PhNumber.setColumns(10);
+        PhNumber.setBounds(173, 119, 209, 34);
+        panel.add(PhNumber);
+
+        email_field = new JTextField();
+        email_field.setColumns(10);
+        email_field.setBounds(173, 163, 209, 34);
+        panel.add(email_field);
+
+        home_addr = new JTextField();
+        home_addr.setColumns(10);
+        home_addr.setBounds(173, 206, 209, 34);
+        panel.add(home_addr);
+
+        work_addr = new JTextField();
+        work_addr.setColumns(10);
+        work_addr.setBounds(173, 250, 209, 34);
+        panel.add(work_addr);
+
+        Snbtn = new JButton("Sign In");
+        Snbtn.setBackground(new Color(105, 105, 105));
+        Snbtn.setForeground(new Color(0, 0, 0));
+        Snbtn.setFont(new Font("Verdana", Font.BOLD, 14));
+        Snbtn.setBounds(132, 420, 121, 28);
+        Snbtn.addActionListener(this);
+        panel.add(Snbtn);
+
+        userfield = new JTextField();
+        userfield.setColumns(10);
+        userfield.setBounds(173, 294, 209, 34);
+        panel.add(userfield);
+
+        passwordfield = new JTextField();
+        passwordfield.setColumns(10);
+        passwordfield.setBounds(173, 338, 209, 34);
+        panel.add(passwordfield);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        if(e.getSource()==Snbtn) {
+            name=namefield.getText();
+            homeaddress = home_addr.getText();
+            workAddress = work_addr.getText();
+            Email = userfield.getText();
+            PhNo = PhNumber.getText();
+            String Date = "2023-09-08";
+            UserName=userfield.getText();
+           // Password=passwordfield.getText();
+            Methods obj = new Methods();
+           try {
+                obj.Insert_User(UserName,name,PhNo,homeaddress,workAddress,Email,Date);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+           // this.dispose();
+            //new User_Page().setVisible(true);
+        }
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+
+                    User_Sign_Up frame = new User_Sign_Up();
+                    frame.setVisible(true);
+                   //
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+}

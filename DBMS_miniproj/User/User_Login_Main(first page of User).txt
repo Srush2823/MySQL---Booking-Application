@@ -1,0 +1,183 @@
+package Cab_Booking_DBMS;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.sql.*;
+
+
+public class User_Login_Main extends JFrame implements ActionListener {
+
+    public JButton loginbtn;
+    public JButton Snbtn_1;
+    static  String UserName,Password;
+    static JTextArea userfield;
+    static JPasswordField passfield;
+    static String name;
+    static String Work_addr;
+    static String Home_addr;
+
+
+    public User_Login_Main()  {
+        setTitle("Login");
+        getContentPane().setBackground(Color.WHITE);
+        setBounds(100, 100, 417, 564);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+        setResizable(false);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(154, 150, 150));
+        panel.setBounds(0, 0, 500, 521);
+        getContentPane().add(panel);
+        panel.setLayout(null);
+
+        loginbtn = new JButton("LOGIN");
+        loginbtn.setBackground(new Color(105, 105, 105));
+        loginbtn.setForeground(new Color(0, 0, 0));
+        loginbtn.setFont(new Font("Verdana", Font.BOLD, 14));
+        loginbtn.setBounds(132, 371, 169, 36);
+        loginbtn.addActionListener(this);
+        panel.add(loginbtn);
+
+        userfield= new JTextArea();
+        userfield.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        userfield.setBounds(71, 224, 284, 36);
+        panel.add(userfield);
+
+        passfield= new JPasswordField();
+        passfield.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        passfield.setBounds(71, 306, 284, 36);
+        panel.add(passfield);
+
+        JLabel lblNewLabel = new JLabel("USERNAME");
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        lblNewLabel.setBackground(new Color(105, 105, 105));
+        lblNewLabel.setForeground(new Color(0, 0, 0));
+        lblNewLabel.setBounds(71, 203, 111, 22);
+        panel.add(lblNewLabel);
+
+        JLabel lblNewLabel_1 = new JLabel("PASSWORD");
+        lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        lblNewLabel_1.setBackground(new Color(105, 105, 105));
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setBounds(71, 280, 111, 27);
+        panel.add(lblNewLabel_1);
+
+        JLabel lblNewLabel_3 = new JLabel("Create Account? ");
+        lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 15));
+        lblNewLabel_3.setForeground(new Color(0, 0, 0));
+        lblNewLabel_3.setBounds(50, 428, 180, 22);
+        panel.add(lblNewLabel_3);
+
+        Snbtn_1 = new JButton("Sign Up");
+        Snbtn_1.setBackground(new Color(105, 105, 105));
+        Snbtn_1.setForeground(new Color(0, 0, 0));
+        Snbtn_1.setFont(new Font("Verdana", Font.BOLD, 12));
+        Snbtn_1.setBounds(214, 430, 90, 25);
+        Snbtn_1.addActionListener(this);
+
+        panel.add(Snbtn_1);
+
+//        JLabel lblNewLabel_2 = new JLabel("");
+//        lblNewLabel_2.setIcon(new ImageIcon(UserLoginMain.class.getResource("/icons/icons8-user-100.png")));
+//        lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+//        lblNewLabel_2.setBounds(97, 48, 210, 131);
+//        panel.add(lblNewLabel_2);
+
+        ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/User_login.png"));
+        Image i14 = i13.getImage().getScaledInstance(130,130,Image.SCALE_DEFAULT);
+        ImageIcon i15 = new ImageIcon(i14);
+        JLabel User_img = new JLabel(i15);
+        User_img.setBounds(97, 48, 210, 131);
+        panel.add(User_img);
+
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        UserName=userfield.getText();
+        Password=passfield.getText();
+
+
+        if(e.getSource()==loginbtn) {
+
+            try{
+//                System.out.println(UserName);
+//                System.out.println(Password);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+
+                String query = "Select Password from User_Pass where UserName=?";
+                String query2 = "Select Name,Home_Addr,Work_Addr from User where UserId = ?";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                PreparedStatement prep_stmt2 = conn.prepareStatement(query2);
+
+                String Uid = User_Login_Main.UserName;
+
+                System.out.println(Uid);
+                prep_stmt.setString(1,Uid );
+                prep_stmt2.setString(1,Uid );
+
+                ResultSet rs = prep_stmt.executeQuery();
+//                ResultSet rs2 = prep_stmt.executeQuery();
+//
+//                while(rs2.next())
+//                {
+//                    name = rs2.getString("Name");
+//                    Home_addr = rs2.getString("Home_Addr");
+//                    Work_addr = rs2.getString("Work_Addr");
+//                }
+                //System.out.println(rs);
+                while(rs.next()){
+                    String pass= rs.getString("Password");
+
+                    System.out.println(pass);
+                    System.out.println(Password);
+                    if(pass.equals(Password)){
+                        System.out.println("Inside");
+                        this.dispose();
+                        new User_Page().setVisible(true);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this,"Wrong Username or Password") ;
+                    }
+                }
+            }catch(SQLException exp){
+
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+        if(e.getSource()==Snbtn_1) {
+            this.dispose();
+            try {
+                new User_Sign_Up().setVisible(true);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+
+    }
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new User_Login_Main().setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        );
+        //new UserLoginMain().setVisible(true);
+    }
+}
