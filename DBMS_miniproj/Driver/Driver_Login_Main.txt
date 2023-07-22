@@ -1,0 +1,147 @@
+package Cab_Booking_DBMS;
+
+import java.awt.*;
+
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.sql.*;
+
+
+public class Driver_Login_Main extends JFrame implements ActionListener {
+
+    public JButton loginbtn;
+
+    public JButton Snbtn_1;
+    static  String DriverName,Password;
+    static JTextArea driverfield;
+    static JPasswordField passfield;
+
+    public Driver_Login_Main()  {
+        setTitle("Login");
+        getContentPane().setBackground(Color.WHITE);
+        setBounds(100, 100, 417, 564);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+        setResizable(false);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(154, 150, 150));
+        panel.setBounds(0, 0, 402, 521);
+        getContentPane().add(panel);
+        panel.setLayout(null);
+
+        loginbtn = new JButton("LOGIN");
+        loginbtn.setBackground(new Color(105, 105, 105));
+        loginbtn.setForeground(new Color(0, 0, 0));
+        loginbtn.setFont(new Font("Verdana", Font.BOLD, 14));
+        loginbtn.setBounds(132, 371, 169, 36);
+        loginbtn.addActionListener(this);
+        panel.add(loginbtn);
+
+        driverfield = new JTextArea();
+        driverfield.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        driverfield.setBounds(71, 224, 284, 36);
+        panel.add(driverfield);
+
+        passfield= new JPasswordField();
+        passfield.setFont(new Font("Nirmala UI Semilight", Font.PLAIN, 16));
+        passfield.setBounds(71, 306, 284, 36);
+        panel.add(passfield);
+
+        JLabel lblNewLabel = new JLabel("DRIVERNAME");
+        lblNewLabel.setBackground(new Color(105, 105, 105));
+        lblNewLabel.setForeground(new Color(0, 0, 0));
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+        lblNewLabel.setBounds(71, 203, 111, 22);
+        panel.add(lblNewLabel);
+
+        JLabel lblNewLabel_1 = new JLabel("PASSWORD");
+        lblNewLabel_1.setBackground(new Color(105, 105, 105));
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 16));
+        lblNewLabel_1.setBounds(71, 280, 111, 27);
+        panel.add(lblNewLabel_1);
+
+
+        ImageIcon i10 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/Driver.png"));
+        Image i11 = i10.getImage().getScaledInstance(130,130,Image.SCALE_DEFAULT);
+        ImageIcon i12 = new ImageIcon(i11);
+        JLabel driver_img = new JLabel(i12);
+        driver_img.setBounds(100, 32, 201, 148);
+        panel.add(driver_img);
+
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+
+        DriverName=driverfield.getText();
+        Password=passfield.getText();
+
+        if(e.getSource()==loginbtn) {
+
+            try{
+//                System.out.println(UserName);
+//                System.out.println(Password);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+
+                String query = "Select Password from Driver_Pass where DriverName=?";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Did = Driver_Login_Main.DriverName;
+
+                prep_stmt.setString(1,Did );
+
+                ResultSet rs = prep_stmt.executeQuery();
+                //System.out.println(rs);
+                while(rs.next()){
+                    String pass= rs.getString("Password");
+                    System.out.println(pass);
+                    System.out.println(Password);
+                    if(pass.equals(Password)){
+                        System.out.println("Inside");
+                        this.dispose();
+                        new Driver_Page().setVisible(true);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this,"Wrong Username or Password") ;
+                    }
+                }
+            }catch(SQLException exp){
+
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+        if(e.getSource()==Snbtn_1) {
+            this.dispose();
+            try {
+                new User_Sign_Up().setVisible(true);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+
+    }
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+                                   public void run() {
+                                       try {
+                                           new Driver_Login_Main().setVisible(true);
+                                       } catch (Exception e) {
+                                           e.printStackTrace();
+                                       }
+                                   }
+                               }
+        );
+        //new UserLoginMain().setVisible(true);
+    }
+}

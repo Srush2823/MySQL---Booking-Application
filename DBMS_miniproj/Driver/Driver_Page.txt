@@ -1,0 +1,363 @@
+package Cab_Booking_DBMS;
+
+import java.awt.*;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import javax.swing.ImageIcon;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
+
+public class Driver_Page extends JFrame implements ActionListener {
+    private JTextField textField;
+    private JTable table;
+    JButton bkbtn,max_trip,grp_by_dest,view;
+    private JTextField textField_1;
+    private JTextField Vehicle_reg, vehicle_type, username, Password;
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    Driver_Page frame = new Driver_Page();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the frame.
+     */
+    public Driver_Page() {
+        getContentPane().setBackground(new Color(154, 150, 150));
+        getContentPane().setLayout(null);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(192, 192, 192));
+        panel.setBounds(0, 0, 341, 600);
+        getContentPane().add(panel);
+        panel.setLayout(null);
+        setResizable(false);
+
+        ImageIcon i10 = new ImageIcon(ClassLoader.getSystemResource("Cab_Booking_DBMS/icons_dbms/Driver2.png"));
+        Image i11 = i10.getImage().getScaledInstance(140,140,Image.SCALE_DEFAULT);
+        ImageIcon i12 = new ImageIcon(i11);
+        JLabel driver_img = new JLabel(i12);
+        driver_img.setBounds(10, 40, 100, 107);
+        panel.add(driver_img);
+
+        JLabel lblNewLabel_1 = new JLabel("DRIVER INFO");
+        lblNewLabel_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+        lblNewLabel_1.setBounds(125, 80, 250, 50);
+        panel.add(lblNewLabel_1);
+
+
+        JLabel Name = new JLabel("Name");
+        Name.setForeground(new Color(0, 0, 0));
+        Name.setFont(new Font("Verdana", Font.PLAIN, 20));
+        Name.setBounds(10, 200, 153, 34);
+        panel.add(Name);
+
+        textField = new JTextField();
+        textField.setBounds(120, 200, 209, 34);
+        panel.add(textField);
+        textField.setColumns(10);
+
+        JLabel lblNewLabel_1_1 = new JLabel("Phone Num");
+        lblNewLabel_1_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_1.setFont(new Font("Verdana", Font.PLAIN, 18));
+        lblNewLabel_1_1.setBounds(10, 250, 153, 34);
+        panel.add(lblNewLabel_1_1);
+
+        JLabel lblNewLabel_1_2 = new JLabel("Vehicle Register");
+        lblNewLabel_1_2.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_2.setFont(new Font("Verdana", Font.PLAIN, 15));
+        lblNewLabel_1_2.setBounds(10, 300, 153, 34);
+        panel.add(lblNewLabel_1_2);
+
+        JLabel lblNewLabel_1_3 = new JLabel("Vehicle Type");
+        lblNewLabel_1_3.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3.setFont(new Font("Verdana", Font.PLAIN, 17));
+        lblNewLabel_1_3.setBounds(10, 350, 153, 34);
+        panel.add(lblNewLabel_1_3);
+
+        JLabel lblNewLabel_1_3_1_1 = new JLabel("UserName");
+        lblNewLabel_1_3_1_1.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3_1_1.setFont(new Font("Verdana", Font.PLAIN, 17));
+        lblNewLabel_1_3_1_1.setBounds(10, 400, 153, 34);
+        panel.add(lblNewLabel_1_3_1_1);
+
+        JLabel lblNewLabel_1_3_1_2 = new JLabel("Password");
+        lblNewLabel_1_3_1_2.setForeground(new Color(0, 0, 0));
+        lblNewLabel_1_3_1_2.setFont(new Font("Verdana", Font.PLAIN, 17));
+        lblNewLabel_1_3_1_2.setBounds(10, 450, 153, 34);
+        panel.add(lblNewLabel_1_3_1_2);
+
+        textField_1 = new JTextField();
+        textField_1.setColumns(10);
+        textField_1.setBounds(120, 250, 209, 34);
+        panel.add(textField_1);
+
+        Vehicle_reg = new JTextField();
+        Vehicle_reg.setColumns(10);
+        Vehicle_reg.setBounds(120, 300, 209, 34);
+        panel.add(Vehicle_reg);
+
+        vehicle_type = new JTextField();
+        vehicle_type.setColumns(10);
+        vehicle_type.setBounds(120, 350, 209, 34);
+        panel.add(vehicle_type);
+
+
+        username = new JTextField();
+        username.setColumns(10);
+        username.setBounds(120, 400, 209, 34);
+        panel.add(username);
+
+        Password = new JTextField();
+        Password.setColumns(10);
+        Password.setBounds(120, 450, 209, 34);
+        panel.add(Password);
+
+        max_trip = new JButton("High Cost");
+        max_trip.setBackground(new Color(105, 105, 105));
+        max_trip.setForeground(new Color(0, 0, 0));
+        max_trip.setFont(new Font("Verdana", Font.BOLD, 14));
+        max_trip.setBounds(20, 500, 120, 39);
+        max_trip.addActionListener(this);
+        panel.add(max_trip);
+
+        grp_by_dest = new JButton("Grp  Dest");
+        grp_by_dest.setBackground(new Color(105, 105, 105));
+        grp_by_dest.setForeground(new Color(0, 0, 0));
+        grp_by_dest.setFont(new Font("Verdana", Font.BOLD, 14));
+        grp_by_dest.setBounds(200, 500, 120, 39);
+        grp_by_dest.addActionListener(this);
+        panel.add(grp_by_dest);
+
+
+
+
+
+        JLabel lblNewLabel_3_1 = new JLabel("");
+        lblNewLabel_3_1.setBounds(64, 155, 46, 46);
+        panel.add(lblNewLabel_3_1);
+
+        JPanel panel_1 = new JPanel();
+        panel_1.setBackground(new Color(154, 150, 150));
+        panel_1.setBounds(351, 10, 496, 600);
+        getContentPane().add(panel_1);
+        panel_1.setLayout(null);
+
+        JLabel lblNewLabel_2 = new JLabel("HISTORY");
+        lblNewLabel_2.setForeground(new Color(0, 0, 0));
+        lblNewLabel_2.setFont(new Font("Yu Gothic", Font.BOLD, 35));
+        lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel_2.setBounds(20, 15, 200, 45);
+        panel_1.add(lblNewLabel_2);
+
+
+        view = new JButton("View");
+        view.setBackground(new Color(105, 105, 105));
+        view.setForeground(new Color(0, 0, 0));
+        view.setFont(new Font("Verdana", Font.BOLD, 14));
+        view.setBounds(190, 500, 120, 39);
+        view.addActionListener(this);
+        panel_1.add(view);
+
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(30, 55, 456, 430);
+        panel_1.add(scrollPane);
+
+        table = new JTable();
+        scrollPane.setViewportView(table);
+        setBounds(100, 100, 884, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+
+
+
+//************************************************************* BOTTONS ****************************************************
+
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+
+        if (e.getSource() == grp_by_dest)
+        {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select count(*), Destination from Trip where DriverId = ? group by Destination";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Did = Driver_Login_Main.DriverName;
+                prep_stmt.setString(1,Did );
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next())
+                {
+                    String did1 = rs.getString("count(*)");
+                    String dest = rs.getString("Destination");
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {did1,dest};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            }
+            catch (ClassNotFoundException | SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+        }
+
+
+//****************************************************************************************************************************
+
+
+
+        if (e.getSource() == max_trip)
+        {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select DriverId, Location ,Destination,Distance,Cost,Date from Trip where DriverId=? order by cost desc limit 1";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Did = Driver_Login_Main.DriverName;
+                prep_stmt.setString(1,Did );
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next())
+                {
+                    String did1 = rs.getString("DriverId");
+                    String loc = rs.getString("Location");
+                    String dest = rs.getString("Destination");
+                    String dist = rs.getString("Distance");
+                    String cost = rs.getString("Cost");
+                    String date = rs.getString("Date");
+
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {did1,loc,dest,dist,cost,date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            }
+            catch (ClassNotFoundException | SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+        }
+
+
+
+//****************************************************************************************************************************
+
+
+
+        if (e.getSource() == view)
+        {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cab", "root", "MyWorkspace#23");
+                String query = "select DriverId, Location ,Destination,Distance,Cost,Date from Trip where DriverId=?";
+                PreparedStatement prep_stmt = conn.prepareStatement(query);
+
+                String Did = Driver_Login_Main.DriverName;
+                prep_stmt.setString(1,Did );
+
+
+                ResultSet rs = prep_stmt.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                table.setModel(new DefaultTableModel());
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                int cols = rsmd.getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++)
+                    colName[i] = rsmd.getColumnName(i + 1);
+                model.setColumnIdentifiers(colName);
+
+
+                while (rs.next())
+                {
+                    String did1 = rs.getString("DriverId");
+                    String loc = rs.getString("Location");
+                    String dest = rs.getString("Destination");
+                    String dist = rs.getString("Distance");
+                    String cost = rs.getString("Cost");
+                    String date = rs.getString("Date");
+
+
+//                    String output = "%s - %s - %s";
+//                    System.out.println(String.format(output, uid, name, date));
+
+                    String[] row = {did1,loc,dest,dist,cost,date};
+                    model.addRow(row);
+                }
+                prep_stmt.close();
+            }
+            catch (ClassNotFoundException | SQLException e1)
+            {
+                e1.printStackTrace();
+            }
+        }
+
+
+
+        if(e.getSource()==bkbtn) {
+            this.dispose();
+            //new BookCab().setVisible(true);
+        }
+    }
+}
